@@ -45,9 +45,9 @@ def parse_buffer(buffer: List[str]):
     return stacks
 
 
-def move_boxes(stacks: List[List[str]], n: int, from_i: int, to_i: int):
+def move_boxes_9000(stacks: List[List[str]], n: int, from_i: int, to_i: int):
     """
-    move n elements from stack from_i to stack to_i
+    move n elements from stack from_i to stack to_i, box by box (stackwise)
     """
     for _ in range(n):
         stacks[to_i].append(stacks[from_i].pop())
@@ -55,7 +55,7 @@ def move_boxes(stacks: List[List[str]], n: int, from_i: int, to_i: int):
 
 
 
-def rearrange_stacks(filename: str = 'advent-2022/day5/input.txt'):
+def rearrange_stacks_9000(filename: str = 'advent-2022/day5/input.txt'):
     instructions_location, stacks = read_input()
 
     with open(filename, 'r') as f:
@@ -66,7 +66,34 @@ def rearrange_stacks(filename: str = 'advent-2022/day5/input.txt'):
             nboxes = int(instruction[1])
             from_stack = int(instruction[3])
             to_stack = int(instruction[-1])
-            stacks = move_boxes(stacks, nboxes, from_stack-1, to_stack-1)
+            stacks = move_boxes_9000(stacks, nboxes, from_stack-1, to_stack-1)
+    
+    return ''.join([s[-1].strip('[]') for s in stacks])
+
+
+def move_boxes_9001(stacks: List[List[str]], n: int, from_i: int, to_i: int):
+    """
+    move n elements from stack from_i to stack to_i, in one go
+    """
+
+    stacks[to_i].extend(stacks[from_i][-n:])
+    stacks[from_i] = stacks[from_i][:-n]
+    return stacks
+
+
+def rearrange_stacks_9001(filename: str = 'advent-2022/day5/input.txt'):
+    instructions_location, stacks = read_input()
+
+    with open(filename, 'r') as f:
+        f.seek(instructions_location)
+
+        while instruction := f.readline():
+            #instruction = f.readline()
+            instruction = instruction.strip().split(' ')
+            nboxes = int(instruction[1])
+            from_stack = int(instruction[3])
+            to_stack = int(instruction[-1])
+            stacks = move_boxes_9001(stacks, nboxes, from_stack-1, to_stack-1)
     
     return ''.join([s[-1].strip('[]') for s in stacks])
 
@@ -76,12 +103,4 @@ def rearrange_stacks(filename: str = 'advent-2022/day5/input.txt'):
 
 
 
-
-
-        
-
-
-
-
-def restack():
-    pass
+     
